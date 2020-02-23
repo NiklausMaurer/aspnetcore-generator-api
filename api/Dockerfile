@@ -1,15 +1,17 @@
 # Build Stage
-FROM microsoft/aspnetcore-build:2 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
 WORKDIR /api
 
-COPY api.csproj .
+# Copy csproj and restore as distinct layers
+COPY api.csproj ./
 RUN dotnet restore
 
-COPY . .
+# Copy everything else and build
+COPY . ./
 RUN dotnet publish -o /publish
 
 # Runtime Image Stage
-FROM microsoft/aspnetcore:2
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 WORKDIR /publish
 COPY --from=build-env /publish .
 ENTRYPOINT ["dotnet", "api.dll"]
