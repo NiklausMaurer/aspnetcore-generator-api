@@ -14,7 +14,14 @@ services:
             SERVER_URL: http://teamcity:8111
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+    my-registry:
+        image: registry:2.6.1
+        volumes:
+        - registry:/var/lib/registry
+        ports:
+        - "55000:5000"
 
 volumes:
     teamcity-server-datadir:
     teamcity-server-logs:
+    registry:
